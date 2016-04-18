@@ -1,0 +1,14 @@
+{
+  "id": "userUpdate",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "User patch",
+  "type": "object",
+  "properties": {
+    "body": {
+      "$ref": "userBody"
+    }
+  },
+  "anyOf": [
+    { "required": ["body"] }
+  ]
+}

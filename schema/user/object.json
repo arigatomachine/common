@@ -1,0 +1,17 @@
+{
+  "id": "userObject",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "id": {
+      "$ref": "common#/definitions/id"
+    },
+    "body": {
+      "$ref": "userBody"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "body"
+  ]
+}

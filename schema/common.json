@@ -1,0 +1,22 @@
+{
+  "id": "common",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Common Definitions",
+  "definitions": {
+    "id": {
+      "pattern": "^[a-zA-Z0-9\\_\\-]+$",
+      "minLength": 24,
+      "maxLength": 24
+    },
+    "name": {
+      "pattern": "^[a-zA-Z\\s\\,\\.\\'\\-\\pL]+$",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "slug": {
+      "pattern": "^[a-zA-Z0-9\\_\\-]+$",
+      "minLength": 1,
+      "maxLength": 64
+    }
+  }
+}
