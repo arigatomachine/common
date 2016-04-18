@@ -1,0 +1,27 @@
+{
+  "id": "userMaster",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Master object",
+  "type": "object",
+  "properties": {
+    "salt": {
+      "$ref": "common#/definitions/id"
+    },
+    "value": {
+      "type": "string",
+      "minLength": 4
+    },
+    "alg": {
+      "type": "string",
+      "enum": [
+        "0x22"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "salt",
+    "value",
+    "alg"
+  ]
+}

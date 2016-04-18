@@ -1,0 +1,36 @@
+{
+  "id": "userBody",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "User body object",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "common#/definitions/name"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "password": {
+      "$ref": "userPassword"
+    },
+    "master": {
+      "$ref": "userMaster"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "unverified",
+        "active"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "email",
+    "password",
+    "master",
+    "state"
+  ]
+}

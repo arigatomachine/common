@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Invalid request",
+  "properties": {
+    "type": {
+      "description": "Error type",
+      "type": "string",
+      "enum": ["invalid_request"]
+    },
+    "message": {
+      "description": "Explanation of the errors",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
