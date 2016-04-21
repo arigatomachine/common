@@ -37,7 +37,8 @@ class Validate {
 
     // Add all schema files and cache them
     files.forEach(function(schema) {
-      self.tv4.addSchema(self._requireSchema(schema));
+      var raw = self._requireSchema(schema);
+      self.tv4.addSchema(raw);
     });
   }
 
@@ -183,7 +184,23 @@ class Validate {
       var invalidPath = !hasKey && path && path.length < 2;
       return code.indexOf(err.code) > -1 && !invalidPath;
     });
-    return _.map(errs, obj => obj.params.key || obj.dataPath.substr(1));
+
+    return _.map(errs, function(obj) {
+      var dataPath = obj.dataPath.substr(1).replace(/\//g, '.');
+      var keys = dataPath.split('.');
+      var lastKey = keys[keys.length - 1];
+
+      var propertyPath = [];
+      if (dataPath.length) {
+        propertyPath.push(dataPath);
+      }
+
+      var key = obj.params.key;
+      if (key && lastKey !== key && key.length) {
+        propertyPath.push(key);
+      }
+      return propertyPath.join('.');
+    });
   }
 
   /**

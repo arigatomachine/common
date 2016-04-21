@@ -1,6 +1,6 @@
 {
-  "id": "userMaster",
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "userCommonMaster",
+  "$schema": "http://json-schema.org/draft-04/schema",
   "title": "Master object",
   "type": "object",
   "properties": {

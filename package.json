@@ -17,7 +17,7 @@
   "dependencies": {
     "lodash": "4.11.1",
     "recursive-readdir-sync": "1.0.6",
-    "tv4": "1.2.7",
+    "tv4": "git+ssh://git@github.com:jeffandersen/tv4.git",
     "tv4-formats": "1.0.2",
     "validator": "5.2.0"
   }

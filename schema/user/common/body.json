@@ -1,6 +1,6 @@
 {
-  "id": "userBody",
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "userCommonBody",
+  "$schema": "http://json-schema.org/draft-04/schema",
   "title": "User body object",
   "type": "object",
   "properties": {
@@ -12,10 +12,10 @@
       "format": "email"
     },
     "password": {
-      "$ref": "userPassword"
+      "$ref": "userCommonPassword"
     },
     "master": {
-      "$ref": "userMaster"
+      "$ref": "userCommonMaster"
     },
     "state": {
       "type": "string",

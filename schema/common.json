@@ -8,15 +8,25 @@
       "minLength": 24,
       "maxLength": 24
     },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
     "name": {
+      "type": "string",
       "pattern": "^[a-zA-Z\\s\\,\\.\\'\\-\\pL]+$",
       "minLength": 3,
       "maxLength": 64
     },
     "slug": {
+      "type": "string",
       "pattern": "^[a-zA-Z0-9\\_\\-]+$",
       "minLength": 1,
       "maxLength": 64
+    },
+    "passphrase": {
+      "type": "string",
+      "minLength": 8
     }
   }
 }
