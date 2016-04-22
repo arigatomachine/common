@@ -4,9 +4,6 @@
   "title": "Master object",
   "type": "object",
   "properties": {
-    "salt": {
-      "$ref": "common#/definitions/id"
-    },
     "value": {
       "type": "string",
       "minLength": 4
@@ -20,7 +17,6 @@
   },
   "additionalProperties": false,
   "required": [
-    "salt",
     "value",
     "alg"
   ]

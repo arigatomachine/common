@@ -3,8 +3,12 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Common Definitions",
   "definitions": {
+    "base64url": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9\\_\\-]+$"
+    },
     "id": {
-      "pattern": "^[a-zA-Z0-9\\_\\-]+$",
+      "$ref": "common#/definitions/base64url",
       "minLength": 24,
       "maxLength": 24
     },
