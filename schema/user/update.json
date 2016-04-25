@@ -5,7 +5,7 @@
   "type": "object",
   "properties": {
     "body": {
-      "$ref": "userBody"
+      "$ref": "userCommonBody"
     }
   },
   "anyOf": [
