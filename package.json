@@ -15,6 +15,7 @@
   },
   "homepage": "https://github.com/arigatomachine/common#readme",
   "dependencies": {
+    "base64url": "1.0.6",
     "lodash": "4.11.1",
     "recursive-readdir-sync": "1.0.6",
     "tv4": "1.2.7",

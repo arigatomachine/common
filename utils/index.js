@@ -3,6 +3,7 @@
 var utils = exports;
 
 var crypto = require('crypto');
+var base64url = require('base64url');
 
 var objects = require('../types/objects');
 
@@ -19,7 +20,5 @@ utils.id = function(type, version) {
 
   var random = crypto.randomBytes(16);
   var id = Buffer.concat([buf, random]);
-  return utils.base64url.encode(id);
+  return base64url.encode(id);
 };
-
-utils.base64url = require('./base64url');
