@@ -1,0 +1,5 @@
+{
+  "id": "sessionInsert",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "$ref": "sessionObject"
+}
