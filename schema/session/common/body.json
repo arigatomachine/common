@@ -1,0 +1,30 @@
+{
+  "id": "sessionCommonBody",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "User body object",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "owner_id": {
+      "$ref": "common#/definitions/id"
+    },
+    "type": {
+      "enum": [
+        "login",
+        "auth"
+      ]
+    },
+    "is_revoked": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "owner_id",
+    "type",
+    "token"
+  ]
+}
