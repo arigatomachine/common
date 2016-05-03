@@ -1,27 +1,24 @@
 {
-  "id": "sessionCommonBody",
+  "id": "verificationCodeCommonBody",
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "User body object",
   "type": "object",
   "properties": {
-    "token": {
-      "type": "string",
-      "maxLength": 255
-    },
     "owner_id": {
       "$ref": "common#/definitions/id"
     },
-    "type": {
-      "enum": [
-        "login",
-        "auth"
-      ]
+    "code": {
+      "type": "string",
+      "maxLength": 9
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "additionalProperties": false,
   "required": [
     "owner_id",
-    "type",
-    "token"
+    "code",
+    "expires_at"
   ]
 }
