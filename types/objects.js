@@ -46,6 +46,10 @@ var objects = {
     mutable: false,
     value: '0x0B'
   },
+  verification_code: {
+    mutable: false,
+    value: '0x0C'
+  },
 };
 
 objects.name = function(b) {
