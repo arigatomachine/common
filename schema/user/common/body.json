@@ -1,7 +1,6 @@
 {
   "id": "userCommonBody",
   "$schema": "http://json-schema.org/draft-04/schema",
-  "title": "User body object",
   "type": "object",
   "properties": {
     "name": {
