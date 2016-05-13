@@ -50,6 +50,14 @@ var objects = {
     mutable: false,
     value: '0x0C'
   },
+  org: {
+    mutable: false,
+    value: '0x0D'
+  },
+  orgs_member: {
+    mutable: true,
+    value: '0x0E'
+  },
 };
 
 objects.name = function(b) {
@@ -57,7 +65,7 @@ objects.name = function(b) {
   return _.findKey(objects, (val, name) => {
     return val.value === b;
   });
-}; 
+};
 
 objects.value = function(name) {
   return objects[name].value;
