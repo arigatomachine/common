@@ -1,0 +1,19 @@
+branches:
+  only:
+    - master
+
+matrix:
+  fast_finish: true
+
+cache:
+  apt: true
+  directories:
+    - node_modules
+    - $HOME/.npm
+
+language: node_js
+node_js:
+- '4.4'
+- '6'
+
+script: gulp test
