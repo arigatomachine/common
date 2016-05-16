@@ -1,6 +1,11 @@
 'use strict';
 var _ = require('lodash');
 
+/**
+ * Mutable signifies whether or not the `id` field is a hash of the underlying
+ * object. If it's set to false then it is immutable, otherwise, it's id is
+ * generated using random data.
+ */
 var objects = {
   user: {
     mutable: true,
@@ -47,11 +52,11 @@ var objects = {
     value: '0b'
   },
   verification_code: {
-    mutable: false,
+    mutable: true,
     value: '0x0C'
   },
   org: {
-    mutable: false,
+    mutable: true,
     value: '0x0D'
   },
   orgs_member: {
