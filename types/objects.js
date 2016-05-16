@@ -4,47 +4,47 @@ var _ = require('lodash');
 var objects = {
   user: {
     mutable: true,
-    value: '0x01'
+    value: '01' // Value represented in hex
   },
   session: {
     mutable: true,
-    value: '0x02'
+    value: '02'
   },
-  app: {
+  service: {
     mutable: true,
-    value: '0x03'
+    value: '03'
   },
   collaborator: {
     mutable: true,
-    value: '0x04'
+    value: '04'
   },
   env: {
     mutable: true,
-    value: '0x05'
+    value: '05'
   },
   public_key: {
     mutable: false,
-    value: '0x06'
+    value: '06'
   },
   private_key: {
     mutable: false,
-    value: '0x07'
+    value: '07'
   },
   claim: {
     mutable: false,
-    value: '0x08'
+    value: '08'
   },
   keyring: {
     mutable: true,
-    value: '0x09'
+    value: '09'
   },
   keyring_member: {
     mutable: false,
-    value: '0x0A'
+    value: '0a' // Hex must be lowercase for matching
   },
   credential: {
     mutable: false,
-    value: '0x0B'
+    value: '0b'
   },
   verification_code: {
     mutable: false,
@@ -62,6 +62,8 @@ var objects = {
 
 objects.name = function(b) {
   b = ''+b; // coerce to string
+  b = b.toLowerCase(); // must always be lowercase
+
   return _.findKey(objects, (val, name) => {
     return val.value === b;
   });
