@@ -42,7 +42,7 @@ utils.id = function(type, payload) {
     throw new Error('unknown object type: ' + type);
   }
   if (payload &&  (!Buffer.isBuffer(payload) ||
-                   Buffer.byteLength(payload) !== PAYLOAD_BYTE_SIZE)) {
+                   payload.length !== PAYLOAD_BYTE_SIZE)) {
     throw new Error('Payload must be a buffer of 16 bytes');
   }
   if (payload && objects[type].mutable) {

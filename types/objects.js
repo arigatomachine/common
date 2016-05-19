@@ -69,7 +69,7 @@ objects.name = function(b) {
   b = ''+b; // coerce to string
   b = b.toLowerCase(); // must always be lowercase
 
-  return _.findKey(objects, (val, name) => {
+  return _.findKey(objects, function (val, name) {
     return val.value === b;
   });
 };

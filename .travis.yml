@@ -15,5 +15,7 @@ language: node_js
 node_js:
 - '4.4'
 - '6'
+- '0.10'
+- '0.12'
 
 script: gulp test
