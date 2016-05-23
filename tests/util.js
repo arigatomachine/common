@@ -5,12 +5,13 @@ var crypto = require('crypto');
 
 var sinon = require('sinon');
 var base64url = require('base64url');
+var bufferEqual = require('buffer-equal');
 
 var utils = require('../utils');
 var objects = require('../types/objects');
 
 describe('utils', function() {
-  
+
   describe('#id', function() {
     it('throws if provided unknown type', function() {
       assert.throws(function() {
@@ -33,9 +34,10 @@ describe('utils', function() {
       var buf = base64url.toBuffer(id);
 
       assert.strictEqual(buf.slice(0,1).toString('hex'), '01');
-      assert.strictEqual(buf.slice(1,2).toString('hex'), 
+      assert.strictEqual(buf.slice(1,2).toString('hex'),
                          objects.credential.value);
-      assert.ok(hash.equals(buf.slice(2)));
+
+      assert.ok(bufferEqual(hash, buf.slice(2)));
       assert.strictEqual(buf.length, 18);
     });
 
@@ -48,12 +50,12 @@ describe('utils', function() {
     it('throws error if payload not provided for immutable object', function() {
       assert.throws(function() {
         utils.id('credential');
-      }, /A payload must be provided for an immutable object/); 
+      }, /A payload must be provided for an immutable object/);
     });
   });
 
   describe('#validate', function() {
-    
+
     it('throws error if id byte length is incorrect', function() {
       assert.throws(function() {
         utils.validate(new Buffer(2));
@@ -83,7 +85,7 @@ describe('utils', function() {
       var id = utils.id('user');
       var buf = utils.validate(id);
 
-      assert.ok(buf.equals(base64url.toBuffer(id)));
+      assert.ok(bufferEqual(buf, base64url.toBuffer(id)));
     });
   });
 
@@ -93,7 +95,7 @@ describe('utils', function() {
       var id = utils.id('user');
 
       var type = utils.type(id);
-      
+
       assert.strictEqual(type, 'user');
       sinon.assert.calledOnce(spy);
     });
