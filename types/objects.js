@@ -19,9 +19,9 @@ var objects = {
     mutable: true,
     value: '03'
   },
-  collaborator: {
+  project: {
     mutable: true,
-    value: '04'
+    value: '04',
   },
   env: {
     mutable: true,
@@ -53,16 +53,16 @@ var objects = {
   },
   verification_code: {
     mutable: true,
-    value: '0x0C'
+    value: '0C'
   },
   org: {
     mutable: true,
-    value: '0x0D'
+    value: '0D'
   },
   orgs_member: {
     mutable: true,
-    value: '0x0E'
-  },
+    value: '0E'
+  }
 };
 
 objects.name = function(b) {
