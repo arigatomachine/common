@@ -59,9 +59,13 @@ var objects = {
     mutable: true,
     value: '0D'
   },
-  orgs_member: {
+  membership: {
     mutable: true,
     value: '0E'
+  },
+  team: {
+    mutable: true,
+    value: '0F'
   }
 };
 
