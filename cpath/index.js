@@ -22,9 +22,8 @@
  *
  * A CPathExp is a like a regular expression for matching many different forms
  * of a CPath. It's provided at the time in-which a config or credential value
- * is stored for future usage. It's a powerful concept enabling for a single
- * value to be shared across many different instances, services, and
- * identities.
+ * is stored for future usage. It's a powerful concept enabling a single value
+ * to be shared across many different instances, services, and identities.
  *
  * A CPathExp has the following form:
  *
@@ -78,7 +77,6 @@ var CPATH_REGEX_STR = '^/'+
 
 var CPATHEXP_REGEX = new RegExp(CPATHEXP_REGEX_STR);
 var CPATH_REGEX = new RegExp(CPATH_REGEX_STR);
-
 
 cpath.parseExp = function (str) {
   return new CPathExp(str);

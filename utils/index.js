@@ -10,7 +10,7 @@
  * then a random payload is assigned. Otherwise, the payload is the hash of the
  * object contents. For example:
  *
- *   obj.id = utils.id('user', blake2b(
+ *   obj.id = utils.id('public_key', blake2b(
  *    Buffer.concat(obj.body, obj.sig), hashsize=16bytes));
  *
  * This way all objects in Arigato have a similar id structure that can be used
