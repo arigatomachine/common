@@ -48,7 +48,7 @@ var objects = {
     value: '0a' // Hex must be lowercase for matching
   },
   credential: {
-    mutable: false,
+    mutable: true,
     value: '0b'
   },
   verification_code: {

@@ -28,14 +28,14 @@ describe('utils', function() {
       assert.strictEqual(buf.length, 18);
     });
 
-    it('constructs a credential id', function() {
+    it('constructs a public_key id', function() {
       var hash = crypto.randomBytes(16);
-      var id = utils.id('credential', hash);
+      var id = utils.id('public_key', hash);
       var buf = base64url.toBuffer(id);
 
       assert.strictEqual(buf.slice(0,1).toString('hex'), '01');
       assert.strictEqual(buf.slice(1,2).toString('hex'),
-                         objects.credential.value);
+                         objects.public_key.value);
 
       assert.ok(bufferEqual(hash, buf.slice(2)));
       assert.strictEqual(buf.length, 18);
@@ -49,7 +49,7 @@ describe('utils', function() {
 
     it('throws error if payload not provided for immutable object', function() {
       assert.throws(function() {
-        utils.id('credential');
+        utils.id('public_key');
       }, /A payload must be provided for an immutable object/);
     });
   });
