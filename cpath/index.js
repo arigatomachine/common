@@ -47,14 +47,17 @@ var cpath = exports;
 
 var util = require('util');
 
+var normalize = require('./normalize');
+var regex = require('./regex');
+
 var SLUG = '[a-z0-9][a-z0-9\\-\\_]{0,63}';
 var WILDCARD = '[\\*]';
-var SLUG_WILDCARD = SLUG + WILDCARD + '?'; // doesnt support dev-*
+
+// We only support `text*` and `*` for wildcarding in a slug
+var SLUG_WILDCARD = SLUG + WILDCARD + '?';
 var SLUG_OR_WILDCARD = '(?:' + SLUG_WILDCARD + '|' + WILDCARD + ')';
 
-// We can only support [X|Y] not [X|Y|Z] because JavaScript doesn't support
-// a kleane star of a capture group:
-var OR_EXP = '\\[(' + SLUG_WILDCARD + ')\\|(' + SLUG_WILDCARD + ')\\]';
+var OR_EXP = '\\[(?:(' + SLUG_WILDCARD + ')\\|)*(' + SLUG_WILDCARD + ')\\]';
 var SLUG_WILDCARD_OR_EXP = '(?:' + SLUG_OR_WILDCARD + '|' + OR_EXP + ')';
 var CPATHEXP_REGEX_STR = '^/' +
                         SLUG + '/' + // org
@@ -78,10 +81,11 @@ var CPATH_REGEX_STR = '^/'+
                         SLUG + // instance
                       '$'; // no trailing slash
 
-var OR_EXP_REGEX = new RegExp('^' + OR_EXP + '$');
-var SLUG_OR_WILDCARD_REGEX = new RegExp('^' + SLUG_OR_WILDCARD + '$');
-var CPATHEXP_REGEX = new RegExp(CPATHEXP_REGEX_STR);
-var CPATH_REGEX = new RegExp(CPATH_REGEX_STR);
+var OR_EXP_REGEX = cpath.OR_EXP_REGEX = new RegExp('^' + OR_EXP + '$');
+var SLUG_OR_WILDCARD_REGEX = cpath.SLUG_OR_WILDCARD_REGEX = new RegExp(
+  '^' + SLUG_OR_WILDCARD + '$');
+var CPATHEXP_REGEX = cpath.CPATHEXP_REGEX = new RegExp(CPATHEXP_REGEX_STR);
+var CPATH_REGEX = cpath.CPATH_REGEX = new RegExp(CPATH_REGEX_STR);
 
 cpath.parseExp = function (str) {
   return new CPathExp(str);
@@ -99,6 +103,19 @@ cpath.validate = function (str) {
   return CPATH_REGEX.test(str);
 };
 
+cpath.normalizeExp = function (target) {
+  if (!Array.isArray(target) && !cpath.validateExp(target)) {
+    throw new Error('Cannot normalize non-valid cpathexp string');
+  }
+
+  var parts = (Array.isArray(target)) ? target : target.split('/');
+  parts = parts.filter(function(part) {
+    return (part.length > 0);
+  });
+
+  return '/' + normalize.path(parts).join('/');
+};
+
 function CPathExp (str) {
   if (typeof str !== 'string') {
     throw new TypeError('cpathexp must be a string');
@@ -111,8 +128,9 @@ function CPathExp (str) {
   var parts = str.split('/').filter(function (part) {
     return (part.length > 0);
   });
+  parts = normalize.path(parts);
 
-  this.regex = cpath.builder(parts);
+  this.regex = regex.builder(parts);
 
   // XXX Think about defining properties on the object and parsing as they
   // are set to catch bugs further upstream then when toString is called.
@@ -202,46 +220,3 @@ function CPathError (message, code) {
 util.inherits(CPathError, Error);
 
 cpath.CPathError = CPathError;
-
-function SLUG_OR_WILDCARD_PART (part) {
-  var star = part.indexOf('*');
-  if (star === -1) {
-    return part;
-  }
-
-  var preamble = part.slice(0,star);
-  var N = 64 - preamble.length;
-  return preamble+'[a-z0-9\-_]{0,' + N + '}';
-}
-
-function OR_PART (part) {
-  var match = part.match(OR_EXP_REGEX);
-  if (!match) {
-    throw new Error('This should match');
-  }
-
-  var contents = match.slice(1).map(SLUG_OR_WILDCARD_PART);
-  return '(?:' + contents.join('|') + ')';
-}
-
-cpath.builder = function (parts) {
-  var part;
-  var match;
-  var output = [];
-  for (var i = 0; i < parts.length; ++i) {
-    part = parts[i];
-    if (OR_EXP_REGEX.test(part)) {
-      output.push(OR_PART(part));
-      continue;
-    }
-
-    if (SLUG_OR_WILDCARD_REGEX.test(part)) {
-      output.push(SLUG_OR_WILDCARD_PART(part));
-      continue;
-    }
-
-    output.push(part);
-  }
-
-  return new RegExp('^/' + output.join('/') + '$');
-};
