@@ -35,13 +35,15 @@ describe('cpath', function () {
 
       assert.strictEqual(obj.org, 'org');
       assert.strictEqual(obj.project, 'proj');
-      assert.strictEqual(obj.environment, '[dev-*|ci]');
+
+      // CPathExp normalizes the path before breaking it into parts.
+      assert.strictEqual(obj.environment, '[ci|dev-*]');
       assert.strictEqual(obj.service, 'service');
       assert.strictEqual(obj.identity, 'ian');
       assert.strictEqual(obj.instance, '1');
 
       assert.strictEqual(obj.toString(),
-                        '/org/proj/[dev-*|ci]/service/ian/1');
+                        '/org/proj/[ci|dev-*]/service/ian/1');
     });
 
     it('throws error on bad path', function () {
@@ -141,11 +143,6 @@ describe('cpath', function () {
         cpath.validateExp('/org/project/sdf/sdf/sdf/[12|13]'), false);
     });
 
-    it('fails for an OR with more than two parts', function() {
-      assert.strictEqual(
-        cpath.validateExp('/org/project/sdf/[abc|abd|abe]/sdf/sdf'), false);
-    });
-
     it('fails for any EXP in org', function () {
       assert.strictEqual(
         cpath.validateExp('/[org|stuff]/sdf/sdf/sdf/sdf/sdf'), false);
@@ -182,6 +179,18 @@ describe('cpath', function () {
     });
   }); 
 
+  describe('.normalizeExp', function() {
+    it('normalizes an OR statement', function() {
+      assert.strictEqual(cpath.normalizeExp('/org/proj/[b|a|c]/d/f/g'),
+                         '/org/proj/[a|b|c]/d/f/g');
+    });
+
+    it('normalizes an OR with a wildcard', function() {
+      assert.strictEqual(cpath.normalizeExp('/org/proj/[b|a|c-*]/d/f/g'),
+                        '/org/proj/[a|b|c-*]/d/f/g'); 
+    });
+  });
+
   describe('CPathExp', function() {
     describe('#compare', function() {
       it('matches directly', function() {
@@ -202,6 +211,16 @@ describe('cpath', function () {
         assert.ok(obj.compare('/org/proj/dev-1/api/ian/1'));
         assert.ok(obj.compare('/org/proj/dev-1/www/ian/1'));
         assert.strictEqual(obj.compare('/org/proj/dev-1/sdf/ian/1'), false);
+      });
+
+      it('matches with an OR with more than two parts', function() {
+        var obj = cpath.parseExp('/org/proj/dev-1/[www|api|auth]/ian/*');
+
+        assert.ok(obj.compare('/org/proj/dev-1/www/ian/1'));
+        assert.ok(obj.compare('/org/proj/dev-1/api/ian/1'));
+        assert.ok(obj.compare('/org/proj/dev-1/auth/ian/1'));
+
+        assert.strictEqual(obj.compare('/org/proj/dev-1/sdfsd/ian/2'), false);
       });
 
       it('matches with an OR wildcard service', function() {
