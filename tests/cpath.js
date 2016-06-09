@@ -141,6 +141,11 @@ describe('cpath', function () {
         cpath.validateExp('/org/project/sdf/sdf/sdf/[12|13]'), false);
     });
 
+    it('fails for an OR with more than two parts', function() {
+      assert.strictEqual(
+        cpath.validateExp('/org/project/sdf/[abc|abd|abe]/sdf/sdf'), false);
+    });
+
     it('fails for any EXP in org', function () {
       assert.strictEqual(
         cpath.validateExp('/[org|stuff]/sdf/sdf/sdf/sdf/sdf'), false);
@@ -164,6 +169,60 @@ describe('cpath', function () {
     it('fails for an OR with a full wildcard component', function () {
       assert.strictEqual(
         cpath.validateExp('/sdf/sdf/[sdf|*]/sdf/sdf/sdf'), false);
+    });
+
+    it('fails for more than one kleane star', function() {
+      assert.strictEqual(
+        cpath.validateExp('/sdf/sdf/[sdf|api]/**/sdf/sdf'), false);
+    });
+
+    it('fails for a non-terminal kleane star', function() {
+      assert.strictEqual(
+        cpath.validateExp('/sdf/sdf/s*fd/sdf/sfd/sdf'), false);
+    });
+  }); 
+
+  describe('CPathExp', function() {
+    describe('#compare', function() {
+      it('matches directly', function() {
+        var obj = cpath.parseExp('/org/proj/dev-1/api/ian/1');
+        assert.ok(obj.compare('/org/proj/dev-1/api/ian/1'));
+      });
+
+      it('matches with a wildcard instance', function() {
+        var obj = cpath.parseExp('/org/proj/dev-1/api/ian/*');
+        assert.ok(obj.compare('/org/proj/dev-1/api/ian/1'));
+        assert.ok(obj.compare('/org/proj/dev-1/api/ian/2'));
+        assert.strictEqual(obj.compare('/org/proj/dev-1/api2/ian/1'), false);
+      });
+
+      it('matches with an OR service', function() {
+        var obj = cpath.parseExp('/org/proj/dev-1/[api|www]/ian/1');
+
+        assert.ok(obj.compare('/org/proj/dev-1/api/ian/1'));
+        assert.ok(obj.compare('/org/proj/dev-1/www/ian/1'));
+        assert.strictEqual(obj.compare('/org/proj/dev-1/sdf/ian/1'), false);
+      });
+
+      it('matches with an OR wildcard service', function() {
+        var obj = cpath.parseExp('/org/proj/dev-1/[www|user*]/ian/*');
+
+        assert.ok(obj.compare('/org/proj/dev-1/www/ian/1'));
+        assert.ok(obj.compare('/org/proj/dev-1/user/ian/1'));
+        assert.ok(obj.compare('/org/proj/dev-1/user/ian/2'));
+        assert.ok(obj.compare('/org/proj/dev-1/users-api/ian/1'));
+
+        assert.strictEqual(obj.compare('/org/proj/dev-1/sdfsf/ian/1'), false);
+      });
+
+      it('matches many wild card levels', function() {
+        var obj = cpath.parseExp('/org/proj/dev-*/*/*/*');
+
+        assert.ok(obj.compare('/org/proj/dev-1/api/ian/1'));
+        assert.ok(obj.compare('/org/proj/dev-2/www/jeff/2'));
+        assert.strictEqual(obj.compare('/org/proj/prod/api/api-1/1'), false);
+        assert.strictEqual(obj.compare('/org/proj/ci/api/ci-1/1'), false);
+      });
     });
   });
 });

@@ -50,9 +50,12 @@ var util = require('util');
 var SLUG = '[a-z0-9][a-z0-9\\-\\_]{0,63}';
 var WILDCARD = '[\\*]';
 var SLUG_WILDCARD = SLUG + WILDCARD + '?'; // doesnt support dev-*
-var SLUG_OR_WILDCARD = '(' + SLUG_WILDCARD + '|' + WILDCARD + ')';
-var OR_EXP = '\\[(' + SLUG_WILDCARD + '\\|)+(' + SLUG_WILDCARD + ')+\\]';
-var SLUG_WILDCARD_OR_EXP = '(' + SLUG_OR_WILDCARD + '|' + OR_EXP + ')';
+var SLUG_OR_WILDCARD = '(?:' + SLUG_WILDCARD + '|' + WILDCARD + ')';
+
+// We can only support [X|Y] not [X|Y|Z] because JavaScript doesn't support
+// a kleane star of a capture group:
+var OR_EXP = '\\[(' + SLUG_WILDCARD + ')\\|(' + SLUG_WILDCARD + ')\\]';
+var SLUG_WILDCARD_OR_EXP = '(?:' + SLUG_OR_WILDCARD + '|' + OR_EXP + ')';
 var CPATHEXP_REGEX_STR = '^/' +
                         SLUG + '/' + // org
                         SLUG + '/' + // project
@@ -75,6 +78,8 @@ var CPATH_REGEX_STR = '^/'+
                         SLUG + // instance
                       '$'; // no trailing slash
 
+var OR_EXP_REGEX = new RegExp('^' + OR_EXP + '$');
+var SLUG_OR_WILDCARD_REGEX = new RegExp('^' + SLUG_OR_WILDCARD + '$');
 var CPATHEXP_REGEX = new RegExp(CPATHEXP_REGEX_STR);
 var CPATH_REGEX = new RegExp(CPATH_REGEX_STR);
 
@@ -107,6 +112,8 @@ function CPathExp (str) {
     return (part.length > 0);
   });
 
+  this.regex = cpath.builder(parts);
+
   // XXX Think about defining properties on the object and parsing as they
   // are set to catch bugs further upstream then when toString is called.
   this.org = parts[0];
@@ -133,6 +140,16 @@ CPathExp.prototype.toString = function () {
   }
 
   return str;
+};
+
+/**
+ * Given a valid cpath string returns whether or not the CPathExp matches.
+ *
+ * @param {String} str cpath string
+ * @return {Boolean}
+ */
+CPathExp.prototype.compare = function (str) {
+  return this.regex.test(str);
 };
 
 function CPath (str) {
@@ -185,3 +202,46 @@ function CPathError (message, code) {
 util.inherits(CPathError, Error);
 
 cpath.CPathError = CPathError;
+
+function SLUG_OR_WILDCARD_PART (part) {
+  var star = part.indexOf('*');
+  if (star === -1) {
+    return part;
+  }
+
+  var preamble = part.slice(0,star);
+  var N = 64 - preamble.length;
+  return preamble+'[a-z0-9\-_]{0,' + N + '}';
+}
+
+function OR_PART (part) {
+  var match = part.match(OR_EXP_REGEX);
+  if (!match) {
+    throw new Error('This should match');
+  }
+
+  var contents = match.slice(1).map(SLUG_OR_WILDCARD_PART);
+  return '(?:' + contents.join('|') + ')';
+}
+
+cpath.builder = function (parts) {
+  var part;
+  var match;
+  var output = [];
+  for (var i = 0; i < parts.length; ++i) {
+    part = parts[i];
+    if (OR_EXP_REGEX.test(part)) {
+      output.push(OR_PART(part));
+      continue;
+    }
+
+    if (SLUG_OR_WILDCARD_REGEX.test(part)) {
+      output.push(SLUG_OR_WILDCARD_PART(part));
+      continue;
+    }
+
+    output.push(part);
+  }
+
+  return new RegExp('^/' + output.join('/') + '$');
+};
