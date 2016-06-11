@@ -3,7 +3,6 @@
 var tv4 = require('tv4');
 var _ = require('lodash');
 var path = require('path');
-var validator = require('validator');
 var recursiveReadSync = require('recursive-readdir-sync');
 var Promise = require('es6-promise').Promise;
 
@@ -49,16 +48,17 @@ Validate.prototype.readSchemas = function () {
  * @param {object} props - Data to validate
  */
 Validate.prototype.schema = function (schemaPath, props) {
+  var self = this;
   return new Promise(function (resolve, reject) {
-    schemaPath = path.join(this.schemaDir, schemaPath+'.json');
+    schemaPath = path.join(self.schemaDir, schemaPath+'.json');
     schemaPath = path.resolve(schemaPath);
 
-    var schema = this._requireSchema(schemaPath);
+    var schema = self._requireSchema(schemaPath);
     if (!schema) {
       return reject(new Error('invalid schema'));
     }
 
-    var result = this.tv4.validateMultiple(props, schema);
+    var result = self.tv4.validateMultiple(props, schema);
     if (result.missing && result.missing.length > 0) {
       var nonEmpty = _.filter(result.missing, function (missing) {
         return !!missing.length;
