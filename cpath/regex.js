@@ -1,14 +1,14 @@
 /**
- * CPathExp Regular Expression Builder
+ * definitionsExp Regular Expression Builder
  *
- * Given an array of CPathExp components this module returns a Regular
- * Expression object for matching against CPath strings.
+ * Given an array of definitionsExp components this module returns a Regular
+ * Expression object for matching against definitions strings.
  */
 'use strict';
 
 var regex = exports;
 
-var cpath = require('./index');
+var definitions = require('./definitions');
 
 function SLUG_OR_WILDCARD_PART (part) {
   var star = part.indexOf('*');
@@ -36,12 +36,12 @@ regex.builder = function (parts) {
   var output = [];
   for (var i = 0; i < parts.length; ++i) {
     part = parts[i];
-    if (cpath.OR_EXP_REGEX.test(part)) {
+    if (definitions.OR_EXP_REGEX.test(part)) {
       output.push(OR_PART(part));
       continue;
     }
 
-    if (cpath.SLUG_OR_WILDCARD_REGEX.test(part)) {
+    if (definitions.SLUG_OR_WILDCARD_REGEX.test(part)) {
       output.push(SLUG_OR_WILDCARD_PART(part));
       continue;
     }

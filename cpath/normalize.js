@@ -10,7 +10,7 @@
 
 var normalize = exports;
 
-var cpath = require('./index');
+var definitions = require('./definitions');
 
 function OR_PART (part) {
   var content = part.slice(1,part.length - 1); // Remove start and end [ ]
@@ -26,7 +26,7 @@ normalize.path = function (parts) {
   for (var i = 0; i < parts.length; ++i) {
     part = parts[i];
 
-    if (cpath.OR_EXP_REGEX.test(part)) {
+    if (definitions.OR_EXP_REGEX.test(part)) {
       output.push(OR_PART(part));
       continue;
     }

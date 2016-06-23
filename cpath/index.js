@@ -49,43 +49,8 @@ var util = require('util');
 
 var normalize = require('./normalize');
 var regex = require('./regex');
-
-var SLUG = '[a-z0-9][a-z0-9\\-\\_]{0,63}';
-var WILDCARD = '[\\*]';
-
-// We only support `text*` and `*` for wildcarding in a slug
-var SLUG_WILDCARD = SLUG + WILDCARD + '?';
-var SLUG_OR_WILDCARD = '(?:' + SLUG_WILDCARD + '|' + WILDCARD + ')';
-
-var OR_EXP = '\\[(?:(' + SLUG_WILDCARD + ')\\|)*(' + SLUG_WILDCARD + ')\\]';
-var SLUG_WILDCARD_OR_EXP = '(?:' + SLUG_OR_WILDCARD + '|' + OR_EXP + ')';
-var CPATHEXP_REGEX_STR = '^/' +
-                        SLUG + '/' + // org
-                        SLUG + '/' + // project
-                        SLUG_WILDCARD_OR_EXP + '/' + // environment
-                        SLUG_WILDCARD_OR_EXP + '/' + // service
-                        SLUG_WILDCARD_OR_EXP + '/' + // identity
-
-                        // XXX: Is an instance always a number?
-                        SLUG_OR_WILDCARD + // instance
-                      '$'; // no trailing slash
-
-var CPATH_REGEX_STR = '^/'+
-                        SLUG + '/' + // org
-                        SLUG + '/' + // project
-                        SLUG + '/' + // environment
-                        SLUG + '/' + // service
-                        SLUG + '/' + // identity
-
-                        // XXX: Is an instance always a number?
-                        SLUG + // instance
-                      '$'; // no trailing slash
-
-var OR_EXP_REGEX = cpath.OR_EXP_REGEX = new RegExp('^' + OR_EXP + '$');
-var SLUG_OR_WILDCARD_REGEX = cpath.SLUG_OR_WILDCARD_REGEX = new RegExp(
-  '^' + SLUG_OR_WILDCARD + '$');
-var CPATHEXP_REGEX = cpath.CPATHEXP_REGEX = new RegExp(CPATHEXP_REGEX_STR);
-var CPATH_REGEX = cpath.CPATH_REGEX = new RegExp(CPATH_REGEX_STR);
+var compare = require('./compare');
+var definitions = require('./definitions')
 
 cpath.parseExp = function (str) {
   return new CPathExp(str);
@@ -96,12 +61,14 @@ cpath.parse = function (str) {
 };
 
 cpath.validateExp = function (str) {
-  return CPATHEXP_REGEX.test(str);
+  return definitions.CPATHEXP_REGEX.test(str);
 };
 
 cpath.validate = function (str) {
-  return CPATH_REGEX.test(str);
+  return definitions.CPATH_REGEX.test(str);
 };
+
+cpath.compare = compare;
 
 cpath.normalizeExp = function (target) {
   if (!Array.isArray(target) && !cpath.validateExp(target)) {
@@ -131,6 +98,7 @@ function CPathExp (str) {
   parts = normalize.path(parts);
 
   this.regex = regex.builder(parts);
+  this.parts = parts;
 
   // XXX Think about defining properties on the object and parsing as they
   // are set to catch bugs further upstream then when toString is called.

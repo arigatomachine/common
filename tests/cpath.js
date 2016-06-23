@@ -191,6 +191,29 @@ describe('cpath', function () {
     });
   });
 
+  describe('.compare', function () {
+    it('returns 0 if exact same', function () {
+      assert.strictEqual(cpath.compare(
+        '/org/proj/env/service/identity/instance',
+        '/org/proj/env/service/identity/instance'
+      ), 0);
+    });
+    
+    it('returns 1 if A is greater than B', function () {
+      assert.strictEqual(cpath.compare(
+        '/org/proj/env/service/identity/instance',
+        '/org/proj/*/service/identity/instance'
+      ), 1);
+    });
+
+    it('returns -1 if B is greater than B', function () {
+      assert.strictEqual(cpath.compare(
+        '/org/proj/dev-*/service/identity/instance',
+        '/org/proj/dev-username/service/identity/instance'
+      ), -1);
+    });
+  });
+
   describe('CPathExp', function() {
     describe('#compare', function() {
       it('matches directly', function() {
