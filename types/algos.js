@@ -12,9 +12,9 @@ var algos = {
 
 algos.name = function(b) {
   b = ''+b; // coerce to string
-  var found = _.findKey(algos, function(val, name) {
+  var found = _.findKey(algos, function(val) {
     return val === b.toLowerCase();
-  })
+  });
   if (found) {
     return found;
   }

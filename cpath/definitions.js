@@ -33,18 +33,10 @@ var CPATH_REGEX_STR = '^/'+
                         SLUG + // instance
                       '$'; // no trailing slash
 
-var WILDCARD_REGEX = definitions.WILDCARD_REGEX =
-  new RegExp('^' + WILDCARD + '$');
-var SLUG_REGEX = definitions.SLUG_REGEX =
-  new RegExp('^' + SLUG + '$');
-var SLUG_WILDCARD_REGEX = definitions.SLUG_WILDCARD_REGEX = 
-  new RegExp('^' + SLUG_WILDCARD + '$');
-var OR_EXP_REGEX = definitions.OR_EXP_REGEX =
-  new RegExp('^' + OR_EXP + '$');
-var SLUG_OR_WILDCARD_REGEX = definitions.SLUG_OR_WILDCARD_REGEX = 
-  new RegExp('^' + SLUG_OR_WILDCARD + '$');
-var CPATHEXP_REGEX = definitions.CPATHEXP_REGEX =
-  new RegExp(CPATHEXP_REGEX_STR);
-var CPATH_REGEX = definitions.CPATH_REGEX =
-  new RegExp(CPATH_REGEX_STR);
-
+definitions.WILDCARD_REGEX = new RegExp('^' + WILDCARD + '$');
+definitions.SLUG_REGEX = new RegExp('^' + SLUG + '$');
+definitions.SLUG_WILDCARD_REGEX =  new RegExp('^' + SLUG_WILDCARD + '$');
+definitions.OR_EXP_REGEX = new RegExp('^' + OR_EXP + '$');
+definitions.SLUG_OR_WILDCARD_REGEX =  new RegExp('^' + SLUG_OR_WILDCARD + '$');
+definitions.CPATHEXP_REGEX = new RegExp(CPATHEXP_REGEX_STR);
+definitions.CPATH_REGEX = new RegExp(CPATH_REGEX_STR);

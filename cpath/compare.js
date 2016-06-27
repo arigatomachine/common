@@ -4,8 +4,8 @@
  * Implements a definitionsExp compareFunction for use in Array#sort. For use in
  * specificity checking.
  *
- * definitionsExp specificity is important in deciding which values we pull from the
- * hierarchy and provide to the user.
+ * definitionsExp specificity is important in deciding which values we pull
+ * from the hierarchy and provide to the user.
  *
  * Token Specificity Rules:
  *
@@ -75,7 +75,7 @@ module.exports = function (a, b) {
 
     if (scoreA < scoreB) {
       return -1;
-    } 
+    }
   }
 
   return 0;

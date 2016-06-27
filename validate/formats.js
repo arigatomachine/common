@@ -1,5 +1,6 @@
 'use strict';
 
+var validator = require('validator');
 var formats = require('tv4-formats');
 
 formats.base64 = function(data) {

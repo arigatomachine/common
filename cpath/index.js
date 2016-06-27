@@ -50,7 +50,7 @@ var util = require('util');
 var normalize = require('./normalize');
 var regex = require('./regex');
 var compare = require('./compare');
-var definitions = require('./definitions')
+var definitions = require('./definitions');
 
 cpath.parseExp = function (str) {
   return new CPathExp(str);
