@@ -14,7 +14,7 @@ gulp.task('mocha', function () {
 });
 
 gulp.task('lint', function() {
-  return gulp.src(['./lib/**/*.js', './tests/**/*.js', 'Gulpfile.js'])
+  return gulp.src(['./**/*.js', '!node_modules/**/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(jshint.reporter('fail'));
