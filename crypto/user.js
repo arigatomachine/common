@@ -70,6 +70,43 @@ user.encryptPasswordObject = function (password) {
     });
 };
 
+var BASE64_URL_REGEX = new RegExp('^[a-zA-Z0-9_\-]+$');
+function isBase64url (str) {
+  return BASE64_URL_REGEX.test(str);
+}
+
+/**
+ * Derives the login_token_hmac given the users plain-text password, salt,
+ * and login_token.
+ *
+ * @param {string} password in plain-text
+ * @param {string} salt plain-text base64url encoded string
+ * @param {string} loginToken plain-text base64url encoded string
+ * @return {Promise} resolves with base64url encoded string
+ */
+user.deriveLoginHmac = function (password, salt, loginToken) {
+  if (typeof password !== 'string') {
+    throw new TypeError('password must be a string');
+  }
+  if (typeof salt !== 'string' || !isBase64url(salt)) {
+    throw new TypeError('salt must be a valid base64url string');
+  }
+  if (typeof loginToken !== 'string') {
+    throw new TypeError('loginToken must be a string');
+  }
+
+  salt = base64url.toBuffer(salt);
+
+  // Perform password stretching to derive a higher entropy key
+  return kdf.generate(password, salt).then(function (passwordBuf) {
+    return user.pwh(passwordBuf); // get the part we use for the password hash
+  }).then(function (pwh) {
+    return utils.hmac(loginToken, pwh); // hmac the login token with the pwh
+  }).then(function (hmac) {
+    return base64url.encode(hmac); // encode the result and return it
+  });
+};
+
 /**
  * Slice password and encode
  *

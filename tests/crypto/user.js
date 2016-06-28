@@ -2,6 +2,7 @@
 
 'use strict';
 
+var base64url = require('base64url');
 var sinon = require('sinon');
 var assert = require('assert');
 var Promise = require('es6-promise').Promise;
@@ -18,36 +19,38 @@ describe('Crypto', function () {
   before(function () {
     this.sandbox = sinon.sandbox.create();
   });
+  
   describe('users', function () {
-    var pwBytes;
-    var mkBytes;
-    var pwCipher;
-    var mkCipher;
+   
+    describe('#encryptPasswordObject', function () {
+      var pwBytes;
+      var mkBytes;
+      var pwCipher;
+      var mkCipher;
 
-    beforeEach(function () {
-      pwBytes = new Buffer(16);
-      mkBytes = new Buffer(256);
-      pwCipher = new Buffer(224);
-      mkCipher = new Buffer('masterkey cipher');
+      beforeEach(function () {
+        pwBytes = new Buffer(16);
+        mkBytes = new Buffer(256);
+        pwCipher = new Buffer(224);
+        mkCipher = new Buffer('masterkey cipher');
 
-      this.sandbox.stub(kdf, 'generate')
+        this.sandbox.stub(kdf, 'generate')
         .returns(Promise.resolve(pwCipher));
 
-      this.sandbox.stub(utils, 'randomBytes')
+        this.sandbox.stub(utils, 'randomBytes')
         .onFirstCall()
         .returns(Promise.resolve(pwBytes))
         .onSecondCall()
         .returns(Promise.resolve(mkBytes));
 
-      this.sandbox.stub(triplesec, 'encrypt')
+        this.sandbox.stub(triplesec, 'encrypt')
         .returns(Promise.resolve(mkCipher));
-    });
+      });
 
-    afterEach(function () {
-      this.sandbox.restore();
-    });
+      afterEach(function () {
+        this.sandbox.restore();
+      });
 
-    describe('#encryptPasswordObject', function () {
       it('generates 16byte salt for password', function () {
         return user.encryptPasswordObject(PLAINTEXT).then(function () {
           sinon.assert.calledTwice(utils.randomBytes);
@@ -86,6 +89,7 @@ describe('Crypto', function () {
 
       it('returns password and master objects', function () {
         return user.encryptPasswordObject(PLAINTEXT).then(function (obj) {
+
           assert.deepEqual(obj, {
             password: {
               salt: base64url.encode(pwBytes),
@@ -110,6 +114,36 @@ describe('Crypto', function () {
           assert.equal(err.message, 'invalid buffer length');
           done();
         });
+      });
+    });
+
+    describe('#deriveLoginHmac', function () {
+      it('throws error if pw is not a string', function () {
+        assert.throws(function () {
+          user.deriveLoginHmac(false); 
+        }, /password must be a string/);
+      });
+
+      it('throws error if salt is not a base64url string', function () {
+        assert.throws(function () {
+          user.deriveLoginHmac('hi', '223---$$#');
+        }, /salt must be a valid base64url string/);
+      });
+
+      it('throws error if loginToken is not a base64url string', function () {
+        assert.throws(function () {
+          user.deriveLoginHmac('hi', 'hi', false);
+        }, /loginToken must be a string/);
+      });
+
+      it('returns a valid hmac in base64url', function () {
+        var pw = 'testing123456';
+        var salt = 'OEssOyvePQ4AwRt8GPNwRg';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOWZkNDE5OGMtMWRmNC00YWNhLTkwY2UtZmFlNjI2OGEzZjRlIiwib3duZXJfaWQiOiJBUUhyTnJLY3k4SEdfN0pmQ2RDeThxRE4iLCJpYXQiOjE0NjcwNzYwNTYsImV4cCI6MTQ2NzA3NjM1Nn0.EbRXovJ0a4Uhhi_ASRd3__Y2G_jLlI3iaX8HhCw6fG0'; // jshint ignore:line
+
+        return user.deriveLoginHmac(pw, salt, token).then(function (hmac) {
+          assert.strictEqual(hmac, '-RaUZYPmVh3Hr7ZoTH115ANcPRWwK5BfRYB1A3RIaEKkwt8yGJaWp9ZSI1RssoNqCpOCq7x-O53fEgWqdHdxrg'); // jshint ignore:line
+        }); 
       });
     });
   });
