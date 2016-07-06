@@ -66,6 +66,10 @@ var objects = {
   team: {
     mutable: true,
     value: '0F'
+  },
+  token: {
+    mutable: true,
+    value: '10'
   }
 };
 
