@@ -3,6 +3,7 @@
 var assert = require('assert');
 var crypto = require('crypto');
 
+var _ =require('lodash');
 var sinon = require('sinon');
 var base64url = require('base64url');
 var bufferEqual = require('buffer-equal');
@@ -23,7 +24,8 @@ describe('utils', function() {
       var id = utils.id('user');
       var buf = base64url.toBuffer(id);
 
-      assert.strictEqual(buf.slice(1,2).toString('hex'), objects.user.value);
+      assert.strictEqual(buf.slice(1,2).toString('hex'),
+                         objects.defn.user.value);
       assert.strictEqual(buf.slice(0,1).toString('hex'), '01');
       assert.strictEqual(buf.length, 18);
     });
@@ -35,7 +37,7 @@ describe('utils', function() {
 
       assert.strictEqual(buf.slice(0,1).toString('hex'), '01');
       assert.strictEqual(buf.slice(1,2).toString('hex'),
-                         objects.public_key.value);
+                         objects.defn.public_key.value);
 
       assert.ok(bufferEqual(hash, buf.slice(2)));
       assert.strictEqual(buf.length, 18);
@@ -90,7 +92,7 @@ describe('utils', function() {
   });
 
   describe('#type', function() {
-    it('returns the type', function() {
+    it('returns the type -- id is string', function() {
       var spy = sinon.spy(utils, 'validate');
       var id = utils.id('user');
 
@@ -98,6 +100,25 @@ describe('utils', function() {
 
       assert.strictEqual(type, 'user');
       sinon.assert.calledOnce(spy);
+    });
+
+    it('returns the type -- id is buffer', function () {
+      var buf = base64url.toBuffer(utils.id('user'));
+      assert.strictEqual(utils.type(buf), 'user');
+    });
+
+    it('matches uppercase type to lowercase -- id is buffer', function () {
+      var buf = crypto.randomBytes(18);
+      buf.write(utils.ID_VERSION_HEX, 0, 1, 'hex');
+      buf.write('0C', 1, 1, 'hex');
+
+      assert.strictEqual(utils.type(buf), 'verification_code');
+    });
+
+    it('no types have uppercase lettering', function () {
+      _.each(objects.defn, function (defn, name) {
+        assert.ok(!/[A-Z]/.test(defn.value), name + ' has uppercase value');
+      });
     });
   });
 });

@@ -1,12 +1,14 @@
 'use strict';
 var _ = require('lodash');
 
+var objects = exports;
+
 /**
  * Mutable signifies whether or not the `id` field is a hash of the underlying
  * object. If it's set to false then it is immutable, otherwise, it's id is
  * generated using random data.
  */
-var objects = {
+var defn = objects.defn = {
   user: {
     mutable: true,
     value: '01' // Value represented in hex
@@ -53,19 +55,19 @@ var objects = {
   },
   verification_code: {
     mutable: true,
-    value: '0C'
+    value: '0c'
   },
   org: {
     mutable: true,
-    value: '0D'
+    value: '0d'
   },
   membership: {
     mutable: true,
-    value: '0E'
+    value: '0e'
   },
   team: {
     mutable: true,
-    value: '0F'
+    value: '0f'
   },
   token: {
     mutable: true,
@@ -77,13 +79,17 @@ objects.name = function(b) {
   b = ''+b; // coerce to string
   b = b.toLowerCase(); // must always be lowercase
 
-  return _.findKey(objects, function (val) {
+  return _.findKey(defn, function (val) {
     return val.value === b;
   });
 };
 
 objects.value = function(name) {
-  return objects[name].value;
+  if (!defn[name]) {
+    throw new TypeError('Unknown object type: ' + name);
+  }
+
+  return defn[name].value.toLowerCase();
 };
 
 module.exports = objects;

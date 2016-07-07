@@ -38,17 +38,18 @@ var ID_VERSION_HEX = utils.ID_VERSION_HEX = '01';
  * @returns {String}
  */
 utils.id = function(type, payload) {
-  if (!objects[type]) {
+  var defn = objects.defn[type];
+  if (!defn) {
     throw new Error('unknown object type: ' + type);
   }
   if (payload &&  (!Buffer.isBuffer(payload) ||
                    payload.length !== PAYLOAD_BYTE_SIZE)) {
     throw new Error('Payload must be a buffer of 16 bytes');
   }
-  if (payload && objects[type].mutable) {
+  if (payload && defn.mutable) {
     throw new Error('Mutable objects do not accept payloads');
   }
-  if (!payload && !objects[type].mutable) {
+  if (!payload && !defn.mutable) {
     throw new Error(
       'A payload must be provided for an immutable object');
   }
@@ -87,7 +88,7 @@ utils.validate = function (id) {
   }
 
   if (!objects.name(hex.slice(2,4))) {
-    throw new Error('Unknown object id: '+hex);
+    throw new Error('Unknown object id: '+ hex.slice(2,4));
   }
 
   return id;
