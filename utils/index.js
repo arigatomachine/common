@@ -1,6 +1,6 @@
 /**
  * All objects inside Arigato are represented by an 18 byte identifier. This
- * identifier is represented in base64url for passing in a non-binary format.
+ * identifier is represented in base32 for passing in a non-binary format.
  *
  * Schema:
  *
@@ -21,7 +21,7 @@
 var utils = exports;
 
 var crypto = require('crypto');
-var base64url = require('base64url');
+var base32 = require('base32');
 
 var objects = require('../types/objects');
 
@@ -64,7 +64,7 @@ utils.id = function(type, payload) {
   payload = payload || crypto.randomBytes(PAYLOAD_BYTE_SIZE);
 
   var id = Buffer.concat([buf, payload]);
-  return base64url.encode(id);
+  return base32.encode(id);
 };
 
 /**
@@ -76,7 +76,7 @@ utils.id = function(type, payload) {
  * @returns Buffer
  */
 utils.validate = function (id) {
-  id = (!Buffer.isBuffer(id)) ? base64url.toBuffer(id) : id;
+  id = (!Buffer.isBuffer(id)) ? new Buffer(base32.decode(id), 'binary') : id;
 
   if (id.length !== ID_BYTE_SIZE) {
     throw new Error('An object id must be '+ID_BYTE_SIZE+' bytes');

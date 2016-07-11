@@ -5,7 +5,7 @@ var crypto = require('crypto');
 
 var _ =require('lodash');
 var sinon = require('sinon');
-var base64url = require('base64url');
+var base32 = require('base32');
 var bufferEqual = require('buffer-equal');
 
 var utils = require('../utils');
@@ -22,7 +22,7 @@ describe('utils', function() {
 
     it('constructs a user id', function() {
       var id = utils.id('user');
-      var buf = base64url.toBuffer(id);
+      var buf = new Buffer(base32.decode(id), 'binary');
 
       assert.strictEqual(buf.slice(1,2).toString('hex'),
                          objects.defn.user.value);
@@ -33,7 +33,7 @@ describe('utils', function() {
     it('constructs a public_key id', function() {
       var hash = crypto.randomBytes(16);
       var id = utils.id('public_key', hash);
-      var buf = base64url.toBuffer(id);
+      var buf = new Buffer(base32.decode(id), 'binary');
 
       assert.strictEqual(buf.slice(0,1).toString('hex'), '01');
       assert.strictEqual(buf.slice(1,2).toString('hex'),
@@ -87,7 +87,7 @@ describe('utils', function() {
       var id = utils.id('user');
       var buf = utils.validate(id);
 
-      assert.ok(bufferEqual(buf, base64url.toBuffer(id)));
+      assert.ok(bufferEqual(buf, new Buffer(base32.decode(id), 'binary')));
     });
   });
 
@@ -103,7 +103,7 @@ describe('utils', function() {
     });
 
     it('returns the type -- id is buffer', function () {
-      var buf = base64url.toBuffer(utils.id('user'));
+      var buf = new Buffer(base32.decode(utils.id('user')), 'binary');
       assert.strictEqual(utils.type(buf), 'user');
     });
 
