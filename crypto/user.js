@@ -34,7 +34,7 @@ user.encryptPasswordObject = function (password) {
     .then(function (passwordSalt) {
       data.password = {
         salt: base64url.encode(passwordSalt),
-        alg: algos.value('scrypt') // 0x23
+        alg: algos.value('scrypt')
       };
 
       // Create password buffer
@@ -50,7 +50,7 @@ user.encryptPasswordObject = function (password) {
     // Construct the master object from the password buffer
     }).then(function (passwordBuf) {
       data.master = {
-        alg: algos.value('triplesec v3') // 0x22
+        alg: algos.value('triplesec-v3')
       };
 
       // Generate 1024 bit (256 byte) master key
