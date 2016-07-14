@@ -2,12 +2,12 @@
 var _ = require('lodash');
 
 var algos = {
-  'eddsa': '20', // Value represented in hex
-  'curve25519': '21',
-  'triplesec v3': '22',
-  'scrypt': '23',
-  'nacl easybox': '24',
-  'nacl secretbox': '24',
+  'eddsa': 'eddsa',
+  'curve25519': 'curve25519',
+  'triplesec-v3': 'triplesec-v3',
+  'scrypt': 'scrypt',
+  'nacl easybox': 'nacl-easybox',
+  'nacl secretbox': 'nacl-secretbox',
 };
 
 algos.name = function(b) {

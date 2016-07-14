@@ -19,9 +19,9 @@ describe('Crypto', function () {
   before(function () {
     this.sandbox = sinon.sandbox.create();
   });
-  
+
   describe('users', function () {
-   
+
     describe('#encryptPasswordObject', function () {
       var pwBytes;
       var mkBytes;
@@ -94,10 +94,10 @@ describe('Crypto', function () {
             password: {
               salt: base64url.encode(pwBytes),
               value: base64url.encode(pwCipher.slice(192)),
-              alg: '23'
+              alg: 'scrypt'
             },
             master: {
-              alg: '22',
+              alg: 'triplesec-v3',
               value: base64url.encode(mkCipher)
             }
           });
@@ -120,7 +120,7 @@ describe('Crypto', function () {
     describe('#deriveLoginHmac', function () {
       it('throws error if pw is not a string', function () {
         assert.throws(function () {
-          user.deriveLoginHmac(false); 
+          user.deriveLoginHmac(false);
         }, /password must be a string/);
       });
 
@@ -143,7 +143,7 @@ describe('Crypto', function () {
 
         return user.deriveLoginHmac(pw, salt, token).then(function (hmac) {
           assert.strictEqual(hmac, '-RaUZYPmVh3Hr7ZoTH115ANcPRWwK5BfRYB1A3RIaEKkwt8yGJaWp9ZSI1RssoNqCpOCq7x-O53fEgWqdHdxrg'); // jshint ignore:line
-        }); 
+        });
       });
     });
   });
