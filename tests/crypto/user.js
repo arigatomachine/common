@@ -142,7 +142,7 @@ describe('Crypto', function () {
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOWZkNDE5OGMtMWRmNC00YWNhLTkwY2UtZmFlNjI2OGEzZjRlIiwib3duZXJfaWQiOiJBUUhyTnJLY3k4SEdfN0pmQ2RDeThxRE4iLCJpYXQiOjE0NjcwNzYwNTYsImV4cCI6MTQ2NzA3NjM1Nn0.EbRXovJ0a4Uhhi_ASRd3__Y2G_jLlI3iaX8HhCw6fG0'; // jshint ignore:line
 
         return user.deriveLoginHmac(pw, salt, token).then(function (hmac) {
-          assert.strictEqual(hmac, '-RaUZYPmVh3Hr7ZoTH115ANcPRWwK5BfRYB1A3RIaEKkwt8yGJaWp9ZSI1RssoNqCpOCq7x-O53fEgWqdHdxrg'); // jshint ignore:line
+          assert.strictEqual(hmac, 'mfX3n81Ta0itj-J06TYvK0tuaG3v0Jt5zqGk5sWY9iqfqkT5UrFscuSm9zRpWKOdtWcgG8FofBB3qR1QKrWDhg'); // jshint ignore:line
         });
       });
     });

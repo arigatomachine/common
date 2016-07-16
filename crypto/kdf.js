@@ -5,7 +5,9 @@ var Promise = require('es6-promise').Promise;
 
 var kdf = exports;
 
-var SCRYPT_N = Math.pow(2, 15); // factor to control cpu/mem suage (2^15)
+// factor to control cpu/mem usage (2^15). triplesec script expects the
+// exponent as its argument.
+var SCRYPT_N = 15;
 var SCRYPT_R = 8; // block size factor
 var SCRYPT_P = 1; // parallelism factor
 var SCRYPT_DKLEN = 224; // generate 224 byte key
