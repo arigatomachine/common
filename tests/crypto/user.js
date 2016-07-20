@@ -76,13 +76,13 @@ describe('Crypto', function () {
         });
       });
 
-      it('encrypts master key with password slice', function () {
+      it('encrypts master key with password', function () {
         return user.encryptPasswordObject(PLAINTEXT).then(function () {
           sinon.assert.calledOnce(triplesec.encrypt);
           var firstCall = triplesec.encrypt.firstCall;
           assert.deepEqual(firstCall.args[0], {
             data: mkBytes,
-            key: pwCipher.slice(0, 192)
+            key: PLAINTEXT
           });
         });
       });

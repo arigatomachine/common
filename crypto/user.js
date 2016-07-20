@@ -44,23 +44,20 @@ user.encryptPasswordObject = function (password) {
         }
         // Append the base64url value
         data.password.value = user.pwh(buf);
-        return buf;
       });
 
     // Construct the master object from the password buffer
-    }).then(function (passwordBuf) {
+    }).then(function () {
       data.master = {
         alg: algos.value('triplesec-v3')
       };
 
       // Generate 1024 bit (256 byte) master key
       return utils.randomBytes(MASTER_KEY_BYTES).then(function (masterKeyBuf) {
-        // Ensure the buffer used to encrypt is 192 bytes
-        var passwordBufSlice = passwordBuf.slice(0, SLICE_LENGTH_BYTES);
-        // Encrypt master key using the password buffer
+        // Encrypt master key using the password
         return triplesec.encrypt({
           data: masterKeyBuf,
-          key: passwordBufSlice
+          key: password,
         }).then(function (buf) {
           // Base64 the master value for transmission
           data.master.value = base64url.encode(buf);
@@ -125,21 +122,10 @@ user.pwh = function (passwordBuf) {
  * @param {object} userObject - Full user object
  */
 user.decryptMasterKey = function (password, userObject) {
-  // Use stored password salt to encrypt password
-  var passwordSalt = userObject.body.password.salt;
-  return kdf.generate(password, passwordSalt).then(function (buf) {
-    // Decode master value from base64url
-    var value = base64url.toBuffer(userObject.body.master.value);
-    // Use the password buffer to decrypt the master key
-    // 192 byte slice
-    var masterKey = buf.slice(0, SLICE_LENGTH_BYTES);
-    if (masterKey.length !== SLICE_LENGTH_BYTES) {
-      throw new Error('invalid buffer length');
-    }
-    // Returns masterKey buffer for use with encrypting
-    return triplesec.decrypt({
-      data: value,
-      key: masterKey
-    });
+  var value = base64url.toBuffer(userObject.body.master.value);
+  // Returns masterKey buffer for use with encrypting
+  return triplesec.decrypt({
+    data: value,
+    key: password,
   });
 };
