@@ -57,7 +57,7 @@ user.encryptPasswordObject = function (password) {
         // Encrypt master key using the password
         return triplesec.encrypt({
           data: masterKeyBuf,
-          key: password,
+          key: new Buffer(password),
         }).then(function (buf) {
           // Base64 the master value for transmission
           data.master.value = base64url.encode(buf);
@@ -126,6 +126,6 @@ user.decryptMasterKey = function (password, userObject) {
   // Returns masterKey buffer for use with encrypting
   return triplesec.decrypt({
     data: value,
-    key: password,
+    key: new Buffer(password),
   });
 };

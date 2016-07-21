@@ -82,7 +82,7 @@ describe('Crypto', function () {
           var firstCall = triplesec.encrypt.firstCall;
           assert.deepEqual(firstCall.args[0], {
             data: mkBytes,
-            key: PLAINTEXT
+            key: new Buffer(PLAINTEXT)
           });
         });
       });
