@@ -72,7 +72,15 @@ var defn = objects.defn = {
   token: {
     mutable: true,
     value: '10'
-  }
+  },
+  policy: {
+    mutable: true,
+    value: '11'
+  },
+  policy_attachment: {
+    mutable: true,
+    value: '12'
+  },
 };
 
 objects.name = function(b) {
