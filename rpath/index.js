@@ -2,11 +2,13 @@
 
 var _ = require('lodash');
 var cpath = require('../cpath');
+var normalize = require('../cpath/normalize');
 
 var RESOURCES = require('./definitions').RESOURCES;
 var OR_ELIGIBLE = require('./definitions').OR_ELIGIBLE;
 var OR_EXP = require('../cpath/definitions').OR_EXP_REGEX;
 var SLUG_OR_WILDCARD = require('../cpath/definitions').SLUG_OR_WILDCARD_REGEX;
+var VAR_REGEX = require('./definitions').VAR_REGEX;
 
 var rpath = exports;
 
@@ -92,7 +94,16 @@ rpath.explode = function (map) {
  * @param {string} secret - secret resource key
  */
 rpath.validate = function (path, secret) {
-  if (!cpath.validateExp(path)) {
+
+  if (path.split('/').length !== 7) {
+    return new Error('Invalid path provided');
+  }
+
+  var cleanPath = path.replace(VAR_REGEX, function (match, p1, p2) {
+    return p2;
+  });
+
+  if (!cpath.validateExp(cleanPath)) {
     return new Error('Invalid path provided');
   }
 
@@ -112,12 +123,13 @@ rpath.validate = function (path, secret) {
 rpath.parse = function (path, secret) {
   var validOrError = rpath.validate(path, secret);
 
-  if (!validOrError) {
+  if (validOrError instanceof Error) {
     throw validOrError;
   }
 
-  var cpathObj = cpath.parseExp(path);
-  var resourceMap = _.pick(cpathObj, RESOURCES);
+  var normalizedPath = normalize.path(path.split('/'));
+  var splitPath = _.takeRight(normalizedPath, 5);
+  var resourceMap = _.zipObject(RESOURCES, splitPath);
 
   resourceMap.secret = secret;
 

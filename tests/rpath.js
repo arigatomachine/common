@@ -5,14 +5,53 @@ var rpath = require('../rpath');
 
 describe('rpath', function () {
 
+  it('validates a path containing variables: env-${username}', function() {
+    var path = '/${org}/landing-page/env-${username}/service/identity/instance';
+    var resourceDescriptor = rpath.parse(path, 'secret');
+
+
+    assert.strictEqual(resourceDescriptor.project, 'landing-page');
+    assert.strictEqual(resourceDescriptor.environment, 'env-${username}');
+    assert.strictEqual(resourceDescriptor.service, 'service');
+    assert.strictEqual(resourceDescriptor.identity, 'identity');
+    assert.strictEqual(resourceDescriptor.instance, 'instance');
+    assert.strictEqual(resourceDescriptor.secret, 'secret');
+  })
+
+  it('validates a path containing variables: ${username}env', function() {
+    var path = '/${org}/landing-page/${username}env/service/identity/instance';
+    var resourceDescriptor = rpath.parse(path, 'secret');
+
+
+    assert.strictEqual(resourceDescriptor.project, 'landing-page');
+    assert.strictEqual(resourceDescriptor.environment, '${username}env');
+    assert.strictEqual(resourceDescriptor.service, 'service');
+    assert.strictEqual(resourceDescriptor.identity, 'identity');
+    assert.strictEqual(resourceDescriptor.instance, 'instance');
+    assert.strictEqual(resourceDescriptor.secret, 'secret');
+  })
+
+  it('validates a path containing variables', function() {
+    var path = '/${org}/landing-page/${username}-*/service/identity/instance';
+    var resourceDescriptor = rpath.parse(path, 'secret');
+
+
+    assert.strictEqual(resourceDescriptor.project, 'landing-page');
+    assert.strictEqual(resourceDescriptor.environment, '${username}-*');
+    assert.strictEqual(resourceDescriptor.service, 'service');
+    assert.strictEqual(resourceDescriptor.identity, 'identity');
+    assert.strictEqual(resourceDescriptor.instance, 'instance');
+    assert.strictEqual(resourceDescriptor.secret, 'secret');
+  })
+
   it('expands a path that contains no OR expressions', function() {
-    var path = '/knotty-buoy/landing-page/dev/*/*/*';
+    var path = '/${org}/project/env-${username}/service/identity/instance';
 
     var resourceDescriptor = rpath.parse(path, 'secret');
     var resources = rpath.expand(resourceDescriptor);
 
     assert.deepEqual(resources, [
-      '/landing-page/dev/*/*/*/secret'
+      '/project/env-${username}/service/identity/instance/secret'
     ]);
   });
 
