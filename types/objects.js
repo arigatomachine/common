@@ -81,6 +81,10 @@ var defn = objects.defn = {
     mutable: true,
     value: '12'
   },
+  org_invite: {
+    mutable: true,
+    value: '13'
+  }
 };
 
 objects.name = function(b) {
