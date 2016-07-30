@@ -12,18 +12,24 @@ var SLUG_OR_WILDCARD = '(?:' + SLUG_WILDCARD + '|' + WILDCARD + ')';
 var OR_EXP = '\\[(?:(' + SLUG_WILDCARD + ')\\|)*(' + SLUG_WILDCARD + ')\\]';
 var SLUG_WILDCARD_OR_EXP = '(?:' + SLUG_OR_WILDCARD + '|' + OR_EXP + ')';
 
-var ACL_RESOURCE_REGEX_STR = new RegExp('^/' +
+var RESOURCE_REGEX_STR = new RegExp('^/' +
     '(' + SLUG + '/?){1}' + // org
-    '(' + SLUG_WILDCARD_OR_EXP + '/){0,1}' + // project (no wildcard) or team (wildcard)
+    '(' + SLUG_WILDCARD_OR_EXP + '/){0,1}' + // project (no wildcard) or team
     '(' + SLUG_WILDCARD_OR_EXP + '/){0,1}' + // environment
     '(' + SLUG_WILDCARD_OR_EXP + '/){0,1}' + // service
     '(' + SLUG_WILDCARD_OR_EXP + '/){0,1}' + // identity
     '(' + SLUG_OR_WILDCARD + '){0,1}' + // instance
   '$'); // no trailing slash
 
+definitions.RESOURCE_REGEX = new RegExp(RESOURCE_REGEX_STR);
+
 var VAR = '(\\${)(' + SLUG + ')(\\})';
 
 definitions.VAR_REGEX = new RegExp(VAR, 'g');
+
+var PARTIAL_RESOURCE = new RegExp('^' + SLUG + '\:' + SLUG_OR_WILDCARD + '$');
+
+definitions.PARTIAL_RESOURCE_REGEX = PARTIAL_RESOURCE;
 
 var PROJECT = 'project';
 var ENVIRONMENT = 'environment';
