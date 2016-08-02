@@ -1,14 +1,19 @@
 'use strict';
 
 var _ = require('lodash');
-var cpath = require('../cpath');
-
-var RESOURCES = require('./definitions').RESOURCES;
-var OR_ELIGIBLE = require('./definitions').OR_ELIGIBLE;
+var normalize = require('../cpath/normalize');
+var definitions = require('./definitions');
 var OR_EXP = require('../cpath/definitions').OR_EXP_REGEX;
 var SLUG_OR_WILDCARD = require('../cpath/definitions').SLUG_OR_WILDCARD_REGEX;
+var RESOURCES = definitions.RESOURCES;
+var OR_ELIGIBLE = definitions.OR_ELIGIBLE;
+var VAR_REGEX = definitions.VAR_REGEX;
+var RESOURCE_REGEX = definitions.RESOURCE_REGEX;
+var PARTIAL_RESOURCE_REGEX = definitions.PARTIAL_RESOURCE_REGEX;
 
 var rpath = exports;
+
+rpath.definitions = definitions;
 
 /**
  * Recursively builds a list of resource permutations
@@ -85,6 +90,30 @@ rpath.explode = function (map) {
   return rpath.expand(map, true);
 };
 
+rpath.isVariable = function (thing) {
+  return VAR_REGEX.test(thing);
+};
+
+rpath.replaceVariable = function (resource, context) {
+  if (!_.isString(resource)) {
+    throw new Error('replaceVariable expected a string');
+  }
+
+  if (!_.isPlainObject(context)) {
+    throw new Error('replaceVariable expected a plain object');
+  }
+
+  return resource.replace(VAR_REGEX, function (match, p1, p2) {
+    var newResource = context[p2];
+
+    if (!newResource) {
+      throw new Error('Context does not contain a valid replacement');
+    }
+
+    return newResource;
+  });
+};
+
 /**
  * validate cpath + secret
  *
@@ -92,11 +121,21 @@ rpath.explode = function (map) {
  * @param {string} secret - secret resource key
  */
 rpath.validate = function (path, secret) {
-  if (!cpath.validateExp(path)) {
+  // Is this a *special* resource path? teams:*
+  if (PARTIAL_RESOURCE_REGEX.test(path)) {
+    return true;
+  }
+
+  // replace ${username} w. username
+  var cleanPath = path.replace(VAR_REGEX, function (match, p1, p2) {
+    return p2;
+  });
+
+  if (!RESOURCE_REGEX.test(cleanPath)) {
     return new Error('Invalid path provided');
   }
 
-  if (!SLUG_OR_WILDCARD.test(secret)) {
+  if (secret && !SLUG_OR_WILDCARD.test(secret)) {
     return new Error('Invalid secret provided');
   }
 
@@ -112,12 +151,13 @@ rpath.validate = function (path, secret) {
 rpath.parse = function (path, secret) {
   var validOrError = rpath.validate(path, secret);
 
-  if (!validOrError) {
+  if (validOrError instanceof Error) {
     throw validOrError;
   }
 
-  var cpathObj = cpath.parseExp(path);
-  var resourceMap = _.pick(cpathObj, RESOURCES);
+  var normalizedPath = normalize.path(path.split('/'));
+  var splitPath = _.takeRight(normalizedPath, 5);
+  var resourceMap = _.zipObject(RESOURCES, splitPath);
 
   resourceMap.secret = secret;
 
