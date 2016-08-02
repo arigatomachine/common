@@ -19,6 +19,7 @@
 'use strict';
 
 var utils = exports;
+utils.codes = require('./codes');
 
 var crypto = require('crypto');
 var base32 = require('base32');
