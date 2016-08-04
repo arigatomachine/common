@@ -84,6 +84,10 @@ var defn = objects.defn = {
   org_invite: {
     mutable: true,
     value: '13'
+  },
+  waitlist: {
+    mutable: true,
+    value: '14'
   }
 };
 
