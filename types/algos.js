@@ -6,8 +6,8 @@ var algos = {
   'curve25519': 'curve25519',
   'triplesec-v3': 'triplesec-v3',
   'scrypt': 'scrypt',
-  'nacl easybox': 'nacl-easybox',
-  'nacl secretbox': 'nacl-secretbox',
+  'nacl easybox': 'easybox',
+  'nacl secretbox': 'secretbox',
 };
 
 algos.name = function(b) {
