@@ -40,3 +40,23 @@ definitions.OR_EXP_REGEX = new RegExp('^' + OR_EXP + '$');
 definitions.SLUG_OR_WILDCARD_REGEX =  new RegExp('^' + SLUG_OR_WILDCARD + '$');
 definitions.CPATHEXP_REGEX = new RegExp(CPATHEXP_REGEX_STR);
 definitions.CPATH_REGEX = new RegExp(CPATH_REGEX_STR);
+
+var PART_TYPE_REGEX_MAP = definitions.PART_TYPE_REGEX_MAP = {
+  'SLUG': definitions.SLUG_REGEX,
+  'SLUG_WILDCARD': definitions.SLUG_WILDCARD_REGEX,
+  'OR': definitions.OR_EXP_REGEX,
+  'WILDCARD': definitions.WILDCARD_REGEX
+};
+var PART_TYPES = Object.keys(PART_TYPE_REGEX_MAP);
+
+definitions.getPartType = function (part) {
+  var type;
+  for (var i = 0; i < PART_TYPES.length; ++i) {
+    type = PART_TYPES[i];
+    if (PART_TYPE_REGEX_MAP[type].test(part)) {
+      return type;
+    }
+  }
+
+  throw new Error('Part did not match a PART_TYPE: ' + part);
+};

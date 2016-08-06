@@ -29,15 +29,6 @@
 var cpath = require('./index');
 var definitions = require('./definitions');
 
-var PART_TYPE_REGEX_MAP = {
-  'SLUG': definitions.SLUG_REGEX,
-  'SLUG_WILDCARD': definitions.SLUG_WILDCARD_REGEX,
-  'OR': definitions.OR_EXP_REGEX,
-  'WILDCARD': definitions.WILDCARD_REGEX
-};
-
-var PART_TYPES = Object.keys(PART_TYPE_REGEX_MAP);
-
 var PART_TYPE_SCORE = {
   'SLUG': 4,
   'SLUG_WILDCARD': 3,
@@ -55,8 +46,8 @@ module.exports = function (a, b) {
   var scoreB;
 
   for (var i = 0; i < a.parts.length; ++i) {
-    typeA = getPartType(a.parts[i]);
-    typeB = getPartType(b.parts[i]);
+    typeA = definitions.getPartType(a.parts[i]);
+    typeB = definitions.getPartType(b.parts[i]);
 
     scoreA = PART_TYPE_SCORE[typeA];
     scoreB = PART_TYPE_SCORE[typeB];
@@ -80,15 +71,3 @@ module.exports = function (a, b) {
 
   return 0;
 };
-
-function getPartType (part) {
-  var type;
-  for (var i = 0; i < PART_TYPES.length; ++i) {
-    type = PART_TYPES[i];
-    if (PART_TYPE_REGEX_MAP[type].test(part)) {
-      return type;
-    }
-  }
-
-  throw new Error('Part did not match a PART_TYPE: ' + part);
-}

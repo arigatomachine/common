@@ -50,6 +50,7 @@ var util = require('util');
 var normalize = require('./normalize');
 var regex = require('./regex');
 var compare = require('./compare');
+var contains = require('./contains');
 var definitions = require('./definitions');
 
 cpath.parseExp = function (str) {
@@ -136,6 +137,17 @@ CPathExp.prototype.toString = function () {
  */
 CPathExp.prototype.compare = function (str) {
   return this.regex.test(str);
+};
+
+/**
+ * Returns true or false depending on whether or not the given pathexp
+ * is contained within the path of this cpathexp.
+ *
+ * @param {CPathExp} obj
+ * @returns {Boolean}
+ */
+CPathExp.prototype.contains = function (obj) {
+  return contains(this, obj);
 };
 
 function CPath (str) {
