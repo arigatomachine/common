@@ -42,7 +42,7 @@ var defn = objects.defn = {
     value: '08'
   },
   keyring: {
-    mutable: true,
+    mutable: false,
     value: '09'
   },
   keyring_member: {
