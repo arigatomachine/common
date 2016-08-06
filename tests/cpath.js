@@ -266,5 +266,37 @@ describe('cpath', function () {
         assert.strictEqual(obj.compare('/org/proj/ci/api/ci-1/1'), false);
       });
     });
+
+    describe('#contains', function () {
+      it('instance is wildcard', function () {
+        var obj = cpath.parseExp('/org/proj/dev-1/api/*/*');
+
+        assert.ok(obj.contains('/org/proj/dev-1/api/*/1'));
+        assert.ok(!obj.contains('/org/proj/dev-1/[api|www]/*/*'));
+      });
+
+      it('env is wildcard', function () {
+        var obj = cpath.parseExp('/org/proj/*/api/*/*');
+
+        assert.ok(obj.contains('/org/proj/prod/api/[ian-*|jeff-*]/1'));
+        assert.ok(obj.contains('/org/proj/dev-*/api/ian/*'));
+        assert.ok(!obj.contains('/org/proj/*/*/*/*'));
+        assert.ok(!obj.contains('/org/proj/prod/www/*/*'));
+        assert.ok(!obj.contains('/org/proj/prod/[api|www]/*/*'));
+        assert.ok(!obj.contains('/abc/proj/dfsf/sdfsf/*/*'));
+      });
+
+      it('a contains OR and B contains OR', function () {
+        var obj = cpath.parseExp('/org/proj/*/[api|www|worker-*]/*/*');
+        
+        assert.ok(obj.contains('/org/proj/*/api/*/*'));
+        assert.ok(obj.contains('/org/proj/*/www/*/*'));
+        assert.ok(obj.contains('/org/proj/*/worker-1/*/*'));
+        assert.ok(obj.contains('/org/proj/*/[api|www]/*/*'));
+        assert.ok(obj.contains('/org/proj/*/worker-*/*/*'));
+        assert.ok(!obj.contains('/org/proj/*/worker/*/*'));
+        assert.ok(!obj.contains('/org/proj/*/*/*/*'));
+      });
+    });
   });
 });
