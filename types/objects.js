@@ -50,7 +50,7 @@ var defn = objects.defn = {
     value: '0a' // Hex must be lowercase for matching
   },
   credential: {
-    mutable: true,
+    mutable: false,
     value: '0b'
   },
   verification_code: {
