@@ -39,3 +39,13 @@ errorTypes.Unauthorized = function Unauthorized(message) {
   this.type = 'unauthorized';
 };
 util.inherits(errorTypes.Unauthorized, Error);
+
+errorTypes.Validation = function Validation(message, code) {
+  Error.captureStackTrace(this, this.constructor);
+  this.name = this.constructor.name;
+  this.message = message || 'Validation Error';
+  this.code = code || 'client_validation_error';
+  this.statusCode = 400;
+  this.type = 'validation_error';
+};
+util.inherits(errorTypes.Validation, Error);
