@@ -1,7 +1,7 @@
 {
   "name": "common",
   "version": "0.8.0",
-  "description": "Common node resources",
+  "description": "common node modules for ag secret management tool",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,10 +10,8 @@
     "type": "git",
     "url": "git+https://github.com/arigatomachine/common.git"
   },
-  "bugs": {
-    "url": "https://github.com/arigatomachine/common/issues"
-  },
-  "homepage": "https://github.com/arigatomachine/common#readme",
+  "homepage": "https://github.com/arigatomachine/common#README.md",
+  "license": "AGPLv3",
   "dependencies": {
     "base32": "0.0.6",
     "base64url": "1.0.6",
