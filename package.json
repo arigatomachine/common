@@ -11,7 +11,7 @@
     "url": "git+https://github.com/arigatomachine/common.git"
   },
   "homepage": "https://github.com/arigatomachine/common#README.md",
-  "license": "AGPLv3",
+  "license": "AGPL-3.0",
   "dependencies": {
     "base32": "0.0.6",
     "base64url": "1.0.6",
