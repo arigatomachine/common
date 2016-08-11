@@ -45,6 +45,8 @@ describe('Crypto', function () {
 
         this.sandbox.stub(triplesec, 'encrypt')
         .returns(Promise.resolve(mkCipher));
+
+        this.timeout(10000);
       });
 
       afterEach(function () {

@@ -38,6 +38,8 @@ definitions.SLUG_REGEX = new RegExp('^' + SLUG + '$');
 definitions.SLUG_WILDCARD_REGEX =  new RegExp('^' + SLUG_WILDCARD + '$');
 definitions.OR_EXP_REGEX = new RegExp('^' + OR_EXP + '$');
 definitions.SLUG_OR_WILDCARD_REGEX =  new RegExp('^' + SLUG_OR_WILDCARD + '$');
+definitions.SLUG_WILDCARD_OR_EXP_REGEX = new RegExp(
+  '^' + SLUG_WILDCARD_OR_EXP + '$');
 definitions.CPATHEXP_REGEX = new RegExp(CPATHEXP_REGEX_STR);
 definitions.CPATH_REGEX = new RegExp(CPATH_REGEX_STR);
 
