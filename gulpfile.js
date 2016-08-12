@@ -3,8 +3,9 @@
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
+var gulpNSP = require('gulp-nsp');
 
-gulp.task('default', ['lint', 'mocha']);
+gulp.task('default', ['nsp', 'lint', 'mocha']);
 
 gulp.task('test', ['default']);
 
@@ -18,4 +19,11 @@ gulp.task('lint', function() {
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(jshint.reporter('fail'));
+});
+
+gulp.task('nsp', function (cb) {
+  gulpNSP({
+    stopOnError: false, // We'll triage these notifications manually
+    package: __dirname + '/package.json'
+  }, cb);
 });
