@@ -69,7 +69,7 @@ rpath.expand = function (map, explode) {
     }
 
     // Record path permutation
-    if (!explode && p.length === 6) {
+    if (!explode && p.length === 7) {
       resourcePerms.push('/' + p.join('/'));
     }
 
@@ -126,7 +126,7 @@ rpath.validate = function (path, secret) {
     return true;
   }
 
-  // replace ${username} w. username
+  // e.g replace ${username} w. username
   var cleanPath = path.replace(VAR_REGEX, function (match, p1, p2) {
     return p2;
   });
@@ -156,7 +156,7 @@ rpath.parse = function (path, secret) {
   }
 
   var normalizedPath = normalize.path(path.split('/'));
-  var splitPath = _.takeRight(normalizedPath, 5);
+  var splitPath = _.takeRight(normalizedPath, 6);
   var resourceMap = _.zipObject(RESOURCES, splitPath);
 
   resourceMap.secret = secret;

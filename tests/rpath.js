@@ -40,6 +40,7 @@ describe('rpath', function () {
       var resourceDescriptor = rpath.parse(path, 'secret');
 
 
+      assert.strictEqual(resourceDescriptor.org, '${org}');
       assert.strictEqual(resourceDescriptor.project, 'landing-page');
       assert.strictEqual(resourceDescriptor.environment, 'env-${username}');
       assert.strictEqual(resourceDescriptor.service, 'service');
@@ -53,6 +54,7 @@ describe('rpath', function () {
       var resourceDescriptor = rpath.parse(path, 'secret');
 
 
+      assert.strictEqual(resourceDescriptor.org, '${org}');
       assert.strictEqual(resourceDescriptor.project, 'landing-page');
       assert.strictEqual(resourceDescriptor.environment, '${username}env');
       assert.strictEqual(resourceDescriptor.service, 'service');
@@ -66,6 +68,7 @@ describe('rpath', function () {
       var resourceDescriptor = rpath.parse(path, 'secret');
 
 
+      assert.strictEqual(resourceDescriptor.org, '${org}');
       assert.strictEqual(resourceDescriptor.project, 'landing-page');
       assert.strictEqual(resourceDescriptor.environment, '${username}-*');
       assert.strictEqual(resourceDescriptor.service, 'service');
@@ -113,7 +116,7 @@ describe('rpath', function () {
       var resources = rpath.expand(resourceDescriptor);
 
       assert.deepEqual(resources, [
-        '/project/env-${username}/service/identity/instance/secret'
+        '/${org}/project/env-${username}/service/identity/instance/secret'
       ]);
     });
 
@@ -124,8 +127,8 @@ describe('rpath', function () {
       var resources = rpath.expand(resourceDescriptor);
 
       assert.deepEqual(resources, [
-        '/landing-page/dev/*/*/*/secret',
-        '/landing-page/prod/*/*/*/secret'
+        '/knotty-buoy/landing-page/dev/*/*/*/secret',
+        '/knotty-buoy/landing-page/prod/*/*/*/secret'
       ]);
     });
 
@@ -136,10 +139,10 @@ describe('rpath', function () {
       var resources = rpath.expand(resourceDescriptor);
 
       assert.deepEqual(resources, [
-        '/landing-page/dev/api/*/*/secret',
-        '/landing-page/dev/www/*/*/secret',
-        '/landing-page/prod/api/*/*/secret',
-        '/landing-page/prod/www/*/*/secret'
+        '/knotty-buoy/landing-page/dev/api/*/*/secret',
+        '/knotty-buoy/landing-page/dev/www/*/*/secret',
+        '/knotty-buoy/landing-page/prod/api/*/*/secret',
+        '/knotty-buoy/landing-page/prod/www/*/*/secret'
       ]);
     });
 
@@ -154,12 +157,13 @@ describe('rpath', function () {
       var resources = rpath.explode(resourceDescriptor);
 
       assert.deepEqual(resources, [
-        '/landing-page',
-        '/landing-page/dev',
-        '/landing-page/dev/*',
-        '/landing-page/dev/*/*',
-        '/landing-page/dev/*/*/*',
-        '/landing-page/dev/*/*/*/secret',
+        '/knotty-buoy',
+        '/knotty-buoy/landing-page',
+        '/knotty-buoy/landing-page/dev',
+        '/knotty-buoy/landing-page/dev/*',
+        '/knotty-buoy/landing-page/dev/*/*',
+        '/knotty-buoy/landing-page/dev/*/*/*',
+        '/knotty-buoy/landing-page/dev/*/*/*/secret',
       ]);
     });
 
@@ -170,17 +174,18 @@ describe('rpath', function () {
       var resources = rpath.explode(resourceDescriptor);
 
       assert.deepEqual(resources, [
-        '/landing-page',
-        '/landing-page/dev',
-        '/landing-page/dev/*',
-        '/landing-page/dev/*/*',
-        '/landing-page/dev/*/*/*',
-        '/landing-page/dev/*/*/*/secret',
-        '/landing-page/prod',
-        '/landing-page/prod/*',
-        '/landing-page/prod/*/*',
-        '/landing-page/prod/*/*/*',
-        '/landing-page/prod/*/*/*/secret'
+        '/knotty-buoy',
+        '/knotty-buoy/landing-page',
+        '/knotty-buoy/landing-page/dev',
+        '/knotty-buoy/landing-page/dev/*',
+        '/knotty-buoy/landing-page/dev/*/*',
+        '/knotty-buoy/landing-page/dev/*/*/*',
+        '/knotty-buoy/landing-page/dev/*/*/*/secret',
+        '/knotty-buoy/landing-page/prod',
+        '/knotty-buoy/landing-page/prod/*',
+        '/knotty-buoy/landing-page/prod/*/*',
+        '/knotty-buoy/landing-page/prod/*/*/*',
+        '/knotty-buoy/landing-page/prod/*/*/*/secret'
       ]);
     });
 
@@ -191,25 +196,26 @@ describe('rpath', function () {
       var resources = rpath.explode(resourceDescriptor);
 
       assert.deepEqual(resources, [
-        '/landing-page',
-        '/landing-page/dev',
-        '/landing-page/dev/api',
-        '/landing-page/dev/api/*',
-        '/landing-page/dev/api/*/*',
-        '/landing-page/dev/api/*/*/secret',
-        '/landing-page/dev/www',
-        '/landing-page/dev/www/*',
-        '/landing-page/dev/www/*/*',
-        '/landing-page/dev/www/*/*/secret',
-        '/landing-page/prod',
-        '/landing-page/prod/api',
-        '/landing-page/prod/api/*',
-        '/landing-page/prod/api/*/*',
-        '/landing-page/prod/api/*/*/secret',
-        '/landing-page/prod/www',
-        '/landing-page/prod/www/*',
-        '/landing-page/prod/www/*/*',
-        '/landing-page/prod/www/*/*/secret'
+        '/knotty-buoy',
+        '/knotty-buoy/landing-page',
+        '/knotty-buoy/landing-page/dev',
+        '/knotty-buoy/landing-page/dev/api',
+        '/knotty-buoy/landing-page/dev/api/*',
+        '/knotty-buoy/landing-page/dev/api/*/*',
+        '/knotty-buoy/landing-page/dev/api/*/*/secret',
+        '/knotty-buoy/landing-page/dev/www',
+        '/knotty-buoy/landing-page/dev/www/*',
+        '/knotty-buoy/landing-page/dev/www/*/*',
+        '/knotty-buoy/landing-page/dev/www/*/*/secret',
+        '/knotty-buoy/landing-page/prod',
+        '/knotty-buoy/landing-page/prod/api',
+        '/knotty-buoy/landing-page/prod/api/*',
+        '/knotty-buoy/landing-page/prod/api/*/*',
+        '/knotty-buoy/landing-page/prod/api/*/*/secret',
+        '/knotty-buoy/landing-page/prod/www',
+        '/knotty-buoy/landing-page/prod/www/*',
+        '/knotty-buoy/landing-page/prod/www/*/*',
+        '/knotty-buoy/landing-page/prod/www/*/*/secret'
       ]);
     });
 
