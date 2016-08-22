@@ -31,6 +31,7 @@ var PARTIAL_RESOURCE = new RegExp('^' + SLUG + '\:' + SLUG_OR_WILDCARD + '$');
 
 definitions.PARTIAL_RESOURCE_REGEX = PARTIAL_RESOURCE;
 
+var ORG = 'org';
 var PROJECT = 'project';
 var ENVIRONMENT = 'environment';
 var SERVICE = 'service';
@@ -38,7 +39,15 @@ var IDENTITY = 'identity';
 var INSTANCE = 'instance';
 var SECRET = 'secret';
 
-var RESOURCES = [PROJECT, ENVIRONMENT, SERVICE, IDENTITY, INSTANCE, SECRET];
+var RESOURCES = [
+  ORG,
+  PROJECT,
+  ENVIRONMENT,
+  SERVICE,
+  IDENTITY,
+  INSTANCE,
+  SECRET
+];
 
 var OR_ELIGIBLE = {};
 
@@ -47,6 +56,7 @@ OR_ELIGIBLE[ENVIRONMENT] = true;
 OR_ELIGIBLE[SERVICE] = true;
 OR_ELIGIBLE[INSTANCE] = true;
 
+definitions.ORG = ORG;
 definitions.PROJECT = PROJECT;
 definitions.ENVIRONMENT = ENVIRONMENT;
 definitions.SERVICE = SERVICE;
