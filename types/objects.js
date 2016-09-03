@@ -88,6 +88,14 @@ var defn = objects.defn = {
   waitlist: {
     mutable: true,
     value: '14'
+  },
+  keyring_member_claim: {
+    mutable: false,
+    value: '15'
+  },
+  mekshare: {
+    mutable: false,
+    value: '16'
   }
 };
 
