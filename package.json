@@ -1,6 +1,6 @@
 {
   "name": "common",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "common node modules for ag secret management tool",
   "main": "index.js",
   "scripts": {
