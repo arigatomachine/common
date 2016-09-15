@@ -102,11 +102,7 @@ Validate.prototype._requireSchema = function (schemaPath) {
   }
 
   var self = this;
-  try {
-    self.schemas[schemaPath] = require(schemaPath);
-  } catch(ignoreErr) {
-    console.warn('could not read schema', ignoreErr);
-  }
+  self.schemas[schemaPath] = require(schemaPath);
   return this.schemas[schemaPath];
 };
 
