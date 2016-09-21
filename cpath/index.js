@@ -200,3 +200,17 @@ function CPathError (message, code) {
 util.inherits(CPathError, Error);
 
 cpath.CPathError = CPathError;
+
+cpath.splitExp = function(exp) {
+  var type = definitions.getPartType(exp);
+  if (type !== 'OR') {
+    return [exp];
+  }
+
+  var trimmed = exp.slice(1, exp.length - 1);
+  return trimmed.split('|');
+};
+
+cpath.isSlug = function(part) {
+  return definitions.SLUG_REGEX.test(part);
+};
