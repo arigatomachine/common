@@ -62,6 +62,37 @@ describe('cpath', function () {
     });
   });
 
+  describe('.splitExp', function() {
+    it('splits an org exp into multiple paths', function() {
+      var paths = cpath.splitExp('notmultiple');
+      assert.deepEqual(paths, [
+        'notmultiple'
+      ]);
+    });
+    it('splits an org exp into multiple paths', function() {
+      var paths = cpath.splitExp('[awesome|sauce]');
+      assert.deepEqual(paths, [
+        'awesome',
+        'sauce'
+      ]);
+    });
+  });
+
+  describe('.isSlug', function() {
+    it('identifies a slug', function() {
+      assert.ok(cpath.isSlug('this-is-a-slug'));
+    });
+    it('rejects a not-slug', function() {
+      [
+        'not-*',
+        '*',
+        '!!!!!'
+      ].forEach(function(slug) {
+        assert.equal(false, cpath.isSlug(slug));
+      });
+    });
+  });
+
   describe('.validate', function () {
     it('passes for valid path - all lower case alpha', function () {
       assert.ok(cpath.validate('/org/proj/env/service/identity/instance'));
