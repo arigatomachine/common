@@ -3,6 +3,9 @@
   "version": "0.14.0",
   "description": "common node modules for ag secret management tool",
   "main": "index.js",
+  "engines": {
+    "node": ">=6.8.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
