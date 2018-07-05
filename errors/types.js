@@ -40,6 +40,15 @@ errorTypes.Unauthorized = function Unauthorized(message) {
 };
 util.inherits(errorTypes.Unauthorized, Error);
 
+errorTypes.Forbidden = function Forbidden(message) {
+  Error.captureStackTrace(this, this.constructor);
+  this.name = this.constructor.name;
+  this.message = message;
+  this.statusCode = 403;
+  this.type = 'forbidden';
+};
+util.inherits(errorTypes.Unauthorized, Error);
+
 errorTypes.Usage = function Usage(message) {
   Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;
